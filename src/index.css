@@ -1,0 +1,290 @@
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100;300;400;500;600;700;800;900&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --primary-h: 191;
+    --primary-s: 97%;
+    --primary-l: 50%;
+
+    /* Sophisticated Dark Palette */
+    --background: 226 50% 4%;
+    --background-deep: 226 60% 2%;
+    --foreground: 210 40% 98%;
+
+    --card: var(--primary-h) 33% 10% / 0.4;
+    --card-foreground: 210 40% 98%;
+
+    --popover: var(--primary-h) 33% 8%;
+    --popover-foreground: 210 40% 98%;
+
+    /* Electric Primary */
+    --primary: var(--primary-h) var(--primary-s) var(--primary-l);
+    --primary-foreground: var(--primary-h) 71% 4%;
+
+    --secondary: var(--primary-h) 33% 12%;
+    --secondary-foreground: 210 40% 98%;
+
+    --muted: var(--primary-h) 35% 15%;
+    --muted-foreground: var(--primary-h) 20% 65%;
+
+    --accent: var(--primary-h) 35% 20% / 0.5;
+    --accent-foreground: 210 40% 98%;
+
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 210 40% 98%;
+
+    --energy: 160 84% 50%;
+    --energy-foreground: 222 47% 11%;
+
+    --warning: 45 93% 47%;
+    --warning-foreground: 222 47% 11%;
+
+    --border: var(--primary-h) 40% 12% / 0.3;
+    --input: var(--primary-h) 40% 12% / 0.3;
+    --ring: var(--primary-h) var(--primary-s) var(--primary-l);
+
+    --radius: 1rem;
+
+    --sidebar-background: 226 60% 4%;
+    --sidebar-foreground: var(--primary-h) 20% 65%;
+    --sidebar-primary: var(--primary-h) var(--primary-s) var(--primary-l);
+    --sidebar-primary-foreground: 222 47% 11%;
+    --sidebar-accent: var(--primary-h) 40% 10% / 0.4;
+    --sidebar-accent-foreground: 210 40% 98%;
+    --sidebar-border: var(--primary-h) 40% 12% / 0.15;
+    --sidebar-ring: var(--primary-h) var(--primary-s) var(--primary-l);
+
+    /* Refined Glassmorphism */
+    --glass-bg: var(--primary-h) 45% 10% / 0.5;
+    --glass-border: 0 0% 100% / 0.08;
+    --glass-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
+
+    /* Luxury Gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(var(--primary-h) var(--primary-s) var(--primary-l)), hsl(var(--primary-h) var(--primary-s) 35%));
+    --gradient-glow: radial-gradient(circle at center, hsla(var(--primary-h), 97%, 50%, 0.15) 0%, transparent 70%);
+    --gradient-purple: linear-gradient(135deg, #F02FC2 0%, #6094EA 100%);
+    --gradient-mesh: radial-gradient(at 0% 0%, hsla(var(--primary-h), 97%, 50%, 0.12) 0, transparent 50%),
+                    radial-gradient(at 100% 0%, rgba(147, 51, 234, 0.12) 0, transparent 50%),
+                    radial-gradient(at 100% 100%, rgba(34, 197, 94, 0.08) 0, transparent 50%),
+                    radial-gradient(at 0% 100%, rgba(59, 130, 246, 0.08) 0, transparent 50%);
+  }
+
+  :root.light {
+    --background: 0 0% 100%;
+    --background-deep: 210 40% 98%;
+    --foreground: 222 47% 11%;
+
+    --card: var(--primary-h) 33% 95% / 0.8;
+    --card-foreground: 222 47% 11%;
+
+    --muted: var(--primary-h) 20% 90%;
+    --muted-foreground: var(--primary-h) 20% 45%;
+
+    --accent: var(--primary-h) 33% 90% / 0.5;
+    --accent-foreground: 222 47% 11%;
+
+    --border: var(--primary-h) 33% 80% / 0.3;
+    --input: var(--primary-h) 33% 95% / 0.5;
+
+    --glass-bg: var(--primary-h) 33% 100% / 0.7;
+    --glass-border: var(--primary-h) 33% 40% / 0.1;
+    --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.05);
+
+    --gradient-bg: radial-gradient(circle at 50% 50%, hsl(var(--primary-h) 40% 98%) 0%, hsl(210 40% 96%) 100%);
+
+    --sidebar-background: 0 0% 98% / 0.95;
+    --sidebar-border: var(--primary-h) 33% 85% / 0.5;
+    --sidebar-foreground: var(--primary-h) 20% 35%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground font-sans antialiased selection:bg-primary/30;
+    font-family: 'Outfit', 'Plus Jakarta Sans', sans-serif;
+    background-image: var(--gradient-mesh);
+    background-attachment: fixed;
+    min-height: 100vh;
+    letter-spacing: -0.01em;
+  }
+
+  /* Smooth Scrolling */
+  html {
+    scroll-behavior: smooth;
+  }
+
+  /* Custom scrollbar - Ultra Thin */
+  ::-webkit-scrollbar {
+    width: 4px;
+    height: 4px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: hsl(var(--border));
+    border-radius: 10px;
+    transition: all 0.5s ease;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: hsl(var(--primary) / 0.8);
+  }
+}
+
+@layer components {
+  .glass-card {
+    border-radius: 2rem;
+    padding: 2rem;
+    border-width: 1px;
+    border-color: rgba(255, 255, 255, 0.05);
+    transition: all 700ms cubic-bezier(0.23, 1, 0.32, 1);
+    background: hsl(var(--glass-bg));
+    backdrop-filter: blur(30px);
+    box-shadow: var(--glass-shadow);
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* Magnetic & Glow Hover */
+  .glass-card:hover {
+    @apply border-white/20 -translate-y-2 scale-[1.02];
+    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.8), 0 0 20px rgba(0, 210, 255, 0.1);
+  }
+
+  /* Hover Shine Effect */
+  .glass-card::before {
+    content: '';
+    @apply absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-in-out pointer-events-none;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.05), transparent);
+  }
+
+  .glass-card-sm {
+    @apply rounded-2xl border border-white/5 p-6 transition-all duration-500 ease-out;
+    background: hsl(var(--glass-bg));
+    backdrop-filter: blur(20px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  }
+
+  .glass-card-sm:hover {
+    @apply border-primary/30 bg-primary/5 -translate-y-1;
+  }
+
+  .glass-navbar {
+    @apply fixed top-0 w-full z-50 border-b border-white/5 h-20 transition-all duration-500;
+    background: rgba(2, 6, 23, 0.6);
+    backdrop-filter: blur(20px);
+  }
+
+  /* Premium Buttons */
+  .btn-primary {
+    @apply px-8 py-3.5 rounded-full font-bold transition-all duration-500 overflow-hidden relative bg-primary text-primary-foreground 
+           hover:shadow-[0_0_40px_rgba(0,210,255,0.5)] hover:scale-105 active:scale-95 flex items-center justify-center gap-2;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    font-size: 0.75rem;
+  }
+
+  /* Shimmer Animation for Primary Button */
+  .btn-primary::after {
+    content: '';
+    @apply absolute inset-0 -translate-x-full hover:animate-[shimmer_2s_infinite] pointer-events-none;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+  }
+
+  @keyframes shimmer {
+    100% { transform: translateX(100%); }
+  }
+
+  .glow-text {
+    text-shadow: 0 0 20px rgba(0, 210, 255, 0.5);
+  }
+
+  .hero-heading {
+    @apply text-6xl md:text-[5.5rem] font-black tracking-tighter leading-[0.85] mb-8 uppercase italic;
+    background: linear-gradient(to bottom, #fff 40%, rgba(255, 255, 255, 0.2));
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    filter: drop-shadow(0 0 30px rgba(255, 255, 255, 0.1));
+  }
+
+  .section-container {
+    @apply max-w-7xl mx-auto px-6 sm:px-12 py-32;
+  }
+
+  /* Utility Glows */
+  .glow-primary { box-shadow: 0 0 30px rgba(0, 210, 255, 0.3); }
+  .glow-energy  { box-shadow: 0 0 30px rgba(34, 197, 94, 0.3); }
+  .glow-warning { box-shadow: 0 0 30px rgba(245, 158, 11, 0.3); }
+  .glow-danger  { box-shadow: 0 0 30px rgba(239, 68, 68, 0.3); }
+  .glow-purple  { box-shadow: 0 0 30px rgba(147, 51, 234, 0.3); }
+}
+
+/* Base Utility Extensions */
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+  
+  .mask-radial {
+    mask-image: radial-gradient(circle at center, black, transparent 80%);
+  }
+
+  .blur-text {
+    filter: blur(8px);
+    transition: filter 0.8s cubic-bezier(0.23, 1, 0.32, 1);
+  }
+
+  .group:hover .blur-text {
+    filter: blur(0px);
+  }
+}
+/* ─── Leaflet Dark Theme Overrides ─── */
+/* Remove default white popup background */
+.leaflet-popup-content-wrapper {
+  background: transparent !important;
+  box-shadow: none !important;
+  border-radius: 12px !important;
+  padding: 0 !important;
+}
+.leaflet-popup-content {
+  margin: 0 !important;
+  line-height: 1.4 !important;
+}
+/* Hide the white arrow tip */
+.leaflet-popup-tip-container,
+.leaflet-popup-tip {
+  display: none !important;
+}
+/* Dark control backgrounds */
+.leaflet-control-zoom a {
+  background: rgba(5, 12, 26, 0.9) !important;
+  color: rgba(255,255,255,0.7) !important;
+  border-color: rgba(255,255,255,0.1) !important;
+}
+.leaflet-control-zoom a:hover {
+  background: rgba(14, 165, 233, 0.2) !important;
+  color: #fff !important;
+}
+/* Attribution */
+.leaflet-control-attribution {
+  background: rgba(5,12,26,0.8) !important;
+  color: rgba(255,255,255,0.2) !important;
+  font-size: 9px !important;
+}
+.leaflet-control-attribution a {
+  color: rgba(14, 165, 233, 0.5) !important;
+}
+/* Map container */
+.monitoring-map {
+  border-radius: 0 0 2rem 2rem;
+}

@@ -1,0 +1,54 @@
+# ── Node ──────────────────────────────────────────────
+node_modules/
+dist/
+dist-ssr/
+*.local
+
+# ── Logs ──────────────────────────────────────────────
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+build_error.log
+build_log.txt
+
+# ── Python virtual environments ───────────────────────
+backend/venv/
+backend/venv_linux/
+backend/venv_win/
+backend/venv_wsl/
+venv/
+venv_linux/
+venv_win/
+venv_wsl/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.pyw
+
+# ── Environment & secrets ─────────────────────────────
+.env
+.env.*
+!.env.example
+
+# ── Vite / TypeScript cache ───────────────────────────
+*.timestamp-*.mjs
+
+# ── Editor ────────────────────────────────────────────
+.vscode/*
+!.vscode/extensions.json
+.idea/
+.DS_Store
+Thumbs.db
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# ── Misc ──────────────────────────────────────────────
+bun.lockb
