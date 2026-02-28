@@ -7,7 +7,7 @@ import Sustainability from '@/components/monitoring/Sustainability';
 import type { MapZone, LiveData as LiveDataType, SustainabilityData } from '@/components/monitoring/types';
 
 // ── Real backend endpoints ──────────────────────────────────────
-const BASE = 'http://localhost:8005';
+const BASE = import.meta.env.VITE_API_BASE_URL || (import.meta.env.PROD ? '' : 'http://localhost:8005');
 const ENDPOINTS = {
   map: `${BASE}/map`,
   liveData: `${BASE}/live-data`,
@@ -105,7 +105,7 @@ export default function LiveMonitoring() {
           </h1>
           <p className="text-sm text-white/40 font-medium mt-1">
             Live data from{' '}
-            <span className="text-primary font-mono text-[11px]">localhost:8005</span>
+            <span className="text-primary font-mono text-[11px]">GridAI Backend</span>
             {' '}— auto-refreshes every 5s
           </p>
         </div>
@@ -113,8 +113,8 @@ export default function LiveMonitoring() {
         <div className="flex items-center gap-3 flex-wrap">
           {/* Connection badge */}
           <div className={`flex items-center gap-2 px-3 py-2 rounded-xl border text-[10px] font-black uppercase tracking-widest ${connected
-              ? 'bg-energy/10 border-energy/30 text-energy'
-              : 'bg-destructive/10 border-destructive/30 text-destructive'
+            ? 'bg-energy/10 border-energy/30 text-energy'
+            : 'bg-destructive/10 border-destructive/30 text-destructive'
             }`}>
             {connected ? <Wifi className="w-3 h-3" /> : <WifiOff className="w-3 h-3" />}
             {connected ? 'Backend Connected' : 'Backend Offline'}
@@ -159,7 +159,7 @@ export default function LiveMonitoring() {
           {Object.values(errors).map((e, i) => (
             <p key={i} className="text-xs text-white/50 font-mono">{e}</p>
           ))}
-          <p className="text-[10px] text-white/25 mt-1">Retrying in 5s · Make sure backend is on port 8005</p>
+          <p className="text-[10px] text-white/25 mt-1">Retrying in 5s · Make sure backend is running</p>
         </motion.div>
       )}
 

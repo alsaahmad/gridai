@@ -38,7 +38,7 @@ latest_update_queue = queue.Queue(maxsize=1)
 # ===============================
 
 def start_stream():
-    """Starts background generator, updater, and pathway worker."""
+    """Starts background generator and updater. Pathway is optional."""
     if getattr(start_stream, "_started", False):
         return
     start_stream._started = True
@@ -49,6 +49,7 @@ def start_stream():
     latest_thread = threading.Thread(target=run_latest_data_updater_loop, daemon=True)
     latest_thread.start()
 
+    # Try to start Pathway worker — skip silently if not available
     pw_thread = threading.Thread(target=pathway_worker, daemon=True)
     pw_thread.start()
 
@@ -78,7 +79,7 @@ def run_generator_loop():
             try:
                 data_queue.get_nowait()
                 data_queue.put(data, block=False)
-            except:
+            except Exception:
                 pass
 
         try:
@@ -87,79 +88,91 @@ def run_generator_loop():
             try:
                 latest_update_queue.get_nowait()
                 latest_update_queue.put(data, block=False)
-            except:
+            except Exception:
                 pass
 
         time.sleep(1)
 
 
 # ===============================
-# PATHWAY WORKER
+# PATHWAY WORKER (OPTIONAL)
 # ===============================
 
 def pathway_worker():
     global latest_data
 
-    print("⚙️ Pathway worker initializing...")
+    print("⚙️ Attempting to start Pathway worker...")
 
-    import os
-    os.environ["PATHWAY_DASHBOARD_ENABLED"] = "false"
+    try:
+        import os
+        os.environ["PATHWAY_DASHBOARD_ENABLED"] = "false"
 
-    import pathway as pw
-    from pathway.io.python import ConnectorSubject
-    
-    class EnergySchema(pw.Schema):
-        timestamp: str
-        zone: str
-        household_load: int
-        solar_generation: int
-        grid_load: int
-        temperature: int
+        import pathway as pw
+        from pathway.io.python import ConnectorSubject
 
-    class QueueConnector(ConnectorSubject):
-        def run(self):
-            print("QUEUE CONNECTOR STARTED")
-            while True:
-                record = data_queue.get()
-                self.next(**record)
+        class EnergySchema(pw.Schema):
+            timestamp: str
+            zone: str
+            household_load: int
+            solar_generation: int
+            grid_load: int
+            temperature: int
 
-    table = pw.io.python.read(
-        QueueConnector(),
-        schema=EnergySchema,
-    )
+        class QueueConnector(ConnectorSubject):
+            def run(self):
+                print("QUEUE CONNECTOR STARTED")
+                while True:
+                    record = data_queue.get()
+                    self.next(**record)
 
-    # Simple processing for now
-    processed = table.select(
-        grid_load=pw.this.grid_load,
-        predicted_load=pw.this.grid_load,
-        renewable_percent=50,
-        risk_score_pw=0.5,
-    )
+        table = pw.io.python.read(
+            QueueConnector(),
+            schema=EnergySchema,
+        )
 
-    def on_update(key, row, time, is_addition):
-        global latest_data
+        # Simple processing
+        processed = table.select(
+            grid_load=pw.this.grid_load,
+            predicted_load=pw.this.grid_load,
+            renewable_percent=50,
+            risk_score_pw=0.5,
+        )
 
+        def on_update(key, row, time, is_addition):
+            global latest_data
+
+            with data_lock:
+                next_latest = dict(latest_data)
+
+                next_latest["grid_load"] = row["grid_load"]
+                next_latest["predicted_load"] = row["predicted_load"]
+                next_latest["renewable_percent"] = row["renewable_percent"]
+                next_latest["risk_score_pw"] = row["risk_score_pw"]
+                next_latest["pathway_status"] = "Running"
+
+                latest_data = next_latest
+
+        pw.io.subscribe(processed, on_update)
+
+        print("STARTING PATHWAY ENGINE")
+        pw.run()
+
+    except ImportError:
+        print("⚠️ Pathway not available — running without it. Stream will still work.")
         with data_lock:
-            next_latest = dict(latest_data)
+            latest_data["pathway_status"] = "Not Available"
+    except Exception as e:
+        print(f"⚠️ Pathway worker failed: {e} — continuing without Pathway.")
+        with data_lock:
+            latest_data["pathway_status"] = f"Error: {str(e)[:60]}"
 
-            next_latest["grid_load"] = row["grid_load"]
-            next_latest["predicted_load"] = row["predicted_load"]
-            next_latest["renewable_percent"] = row["renewable_percent"]
-            next_latest["risk_score_pw"] = row["risk_score_pw"]
-            next_latest["pathway_status"] = "Running"
 
-            latest_data = next_latest
-
-    pw.io.subscribe(processed, on_update)
-
-    print("STARTING ENGINE")
-    pw.run()
 # ===============================
 # LATEST DATA UPDATER
 # ===============================
 
 def run_latest_data_updater_loop():
-    """Updates latest_data snapshot."""
+    """Updates latest_data snapshot from raw generator."""
     global latest_data
 
     print("🧠 Latest-data updater started.")
@@ -171,11 +184,16 @@ def run_latest_data_updater_loop():
             next_latest = dict(latest_data)
             next_latest.update(record)
 
-            next_latest.setdefault("grid_load_avg", 0)
-            next_latest.setdefault("risk_score_pw", 0)
-            next_latest.setdefault("predicted_load", 0)
-            next_latest.setdefault("renewable_percent", 0)
+            # Compute enriched fields if pathway is not running
+            grid_load = next_latest.get("grid_load", 100)
+            solar = next_latest.get("solar_generation", 30)
 
-            next_latest.setdefault("pathway_status", "Starting...")
+            if next_latest.get("pathway_status") not in ("Running",):
+                next_latest["predicted_load"] = grid_load + random.randint(-10, 20)
+                next_latest["risk_score_pw"] = round(min(grid_load / 200.0, 1.0), 3)
+                next_latest["renewable_percent"] = round((solar / grid_load) * 100, 2) if grid_load > 0 else 0
+
+            next_latest.setdefault("grid_load_avg", grid_load)
+            next_latest.setdefault("pathway_status", "Fallback Mode")
 
             latest_data = next_latest

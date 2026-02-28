@@ -1,0 +1,28 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Virtual environments
+venv/
+venv_linux/
+venv_win/
+venv_wsl/
+backend/venv/
+backend/venv_linux/
+backend/venv_win/
+backend/venv_wsl/
+
+# Node
+node_modules/
+
+# Logs
+*.log
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Env
+.env

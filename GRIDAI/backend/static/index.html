@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>GridAI | Smart Energy Management</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="style.css" />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  </head>
+  <body>
+    <div class="app-container">
+      <aside class="sidebar">
+        <div class="logo">
+          <span class="logo-icon">⚡</span>
+          <h1>GridAI</h1>
+        </div>
+        <nav>
+          <a href="#" class="nav-item active">Dashboard</a>
+          <a href="#" class="nav-item">Analytics</a>
+          <a href="#" class="nav-item">Solar Insights</a>
+          <a href="#" class="nav-item"
+            >Alerts <span class="badge" id="alert-badge">0</span></a
+          >
+          <a href="#" class="nav-item">Settings</a>
+        </nav>
+        <div class="sidebar-footer">
+          <div class="status-indicator">
+            <span class="pulse"></span> System Live
+          </div>
+        </div>
+      </aside>
+
+      <main class="content">
+        <header>
+          <div class="header-info">
+            <h2>Energy Overview</h2>
+            <p id="current-time">Feb 23, 2026 | 12:45 PM</p>
+          </div>
+          <div class="weather-widget" id="weather-widget">
+            <div class="loading">Fetching weather...</div>
+          </div>
+        </header>
+
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-header">
+              <span class="stat-label">Current Grid Load</span>
+              <span class="stat-icon">📈</span>
+            </div>
+            <div class="stat-value" id="load-value">-- kW</div>
+            <div class="stat-meta">
+              Next hour projection: <span id="prediction-value">--</span> kW
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-header">
+              <span class="stat-label">Solar Generation</span>
+              <span class="stat-icon">☀️</span>
+            </div>
+            <div class="stat-value" id="solar-value">-- kW</div>
+            <div class="stat-meta">
+              Renewable: <span id="renewable-percent">--</span>%
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-header">
+              <span class="stat-label">Risk Level</span>
+              <span class="stat-icon">⚠️</span>
+            </div>
+            <div class="stat-value" id="risk-level">--</div>
+            <div class="stat-meta" id="risk-score">Score: --/100</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-header">
+              <span class="stat-label">CO2 Saved</span>
+              <span class="stat-icon">🌱</span>
+            </div>
+            <div class="stat-value" id="co2-value">-- kg</div>
+            <div class="stat-meta">Today's contribution</div>
+          </div>
+        </div>
+
+        <div class="dashboard-charts">
+          <div class="chart-container main-chart">
+            <h3>Load Trend (Live)</h3>
+            <canvas id="loadChart"></canvas>
+          </div>
+          <div class="chart-container secondary-chart">
+            <h3>Zone Distribution</h3>
+            <div id="zone-list" class="zone-list">
+              <!-- Zones will be injected here -->
+            </div>
+          </div>
+        </div>
+
+        <section class="alerts-section">
+          <h3>Active Alerts</h3>
+          <div id="alerts-container" class="alerts-container">
+            <div class="no-alerts">
+              No active threats detected. System is stable.
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+    <script src="script.js"></script>
+  </body>
+</html>

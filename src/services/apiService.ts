@@ -1,4 +1,8 @@
-const API_BASE_URL = 'http://localhost:8005';
+// In production (Railway), the frontend is served by the same FastAPI server,
+// so all API calls are relative (same origin). In local dev, point to localhost:8005.
+const API_BASE_URL =
+  import.meta.env.VITE_API_BASE_URL ||
+  (import.meta.env.PROD ? '' : 'http://localhost:8005');
 
 export async function fetchMapData() {
   const response = await fetch(`${API_BASE_URL}/map`);
@@ -37,13 +41,13 @@ export async function fetchPredictions() {
     },
     risk: {
       load: predRes.current_load ?? 0,
-      capacity: 200, // Matching backend default
+      capacity: 200,
       risk_level: riskRes.risk_level ?? 'LOW',
-      risk_score: (riskRes.risk_score ?? 0) * 100, // assume score is decimal from pathway
+      risk_score: (riskRes.risk_score ?? 0) * 100,
     },
     sustainability: {
       renewable_percentage: sustainRes.renewable_percentage ?? 0,
-      co2_saved: (predRes.current_load ?? 0) * 0.45, // realistic mock estimation
+      co2_saved: (predRes.current_load ?? 0) * 0.45,
       predicted_emission: (predRes.predicted_load ?? 0) * 0.52,
     },
     live: liveRes,
@@ -71,7 +75,7 @@ export async function fetchTheftData() {
   return response.json();
 }
 
-// ─── AI Forecasting backend (port 8005) ──────────────────────────────────────
+// ─── AI Forecasting backend ──────────────────────────────────────────────────
 
 async function safeJsonFetch(url: string) {
   const res = await fetch(url);

@@ -14,6 +14,7 @@ export default defineConfig(({ mode }) => ({
   },
   plugins: [react(), mode === "development" && componentTagger()].filter(Boolean),
   build: {
+    // Output to backend/static so FastAPI can serve it as a unified app on Railway
     outDir: "backend/static",
     emptyOutDir: true,
   },
