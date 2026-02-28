@@ -1,9 +1,12 @@
 [phases.setup]
-nixPkgs = ["python311", "nodejs_20", "gcc", "libffi", "openssl"]
+# Python 3.11 + Node 20 for building the React frontend
+# gcc, make, libffi, openssl, rustup are needed for Pathway's native Rust/C extensions
+nixPkgs = ["python311", "nodejs_20", "gcc", "gnumake", "libffi", "openssl", "pkg-config", "zlib"]
 
 [phases.install]
 cmds = [
   "npm ci",
+  "pip install --upgrade pip",
   "pip install -r backend/requirements.txt"
 ]
 
